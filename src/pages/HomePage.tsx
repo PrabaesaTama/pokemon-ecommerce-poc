@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import {
-  Button,
-  Card,
   Col,
   Container,
   InputGroup,
@@ -9,7 +7,7 @@ import {
   Form,
   Spinner,
 } from "react-bootstrap";
-import { MdSearch, MdShoppingCart } from "react-icons/md";
+import { MdSearch } from "react-icons/md";
 import { getAllCards } from "../services/PokemonApi";
 import type { PokemonCard } from "../services/types/PokemonCardType";
 import CardList from "../components/CardList";

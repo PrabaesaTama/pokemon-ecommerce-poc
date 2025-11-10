@@ -85,8 +85,35 @@ export interface IPokemonCard {
       };
     };
   };
+  variants?: {
+    firstEdition: boolean;
+    hololo: boolean;
+    normal: boolean;
+    reverse: boolean;
+    wPromo: boolean;
+  };
+  hp?: number;
+  types?: string[];
+  evolveFrom?: string;
+  description?: string;
+  stage?: string;
+  attacks?: {
+    cost: string[];
+    name: string;
+    effect?: string;
+    damage?: number;
+  }[];
+  weaknesses?: {
+    type: string;
+    value: string;
+  }[];
+  retreat?: number;
+  regulationMark?: string;
+  legal?: {
+    standard: boolean;
+    expanded: boolean;
+  };
 }
-
 export class PokemonCard implements IPokemonCard {
   id: string = "";
   name: string = "";
@@ -174,6 +201,35 @@ export class PokemonCard implements IPokemonCard {
       }
     | undefined;
 
+  variants?: {
+    firstEdition: boolean;
+    hololo: boolean;
+    normal: boolean;
+    reverse: boolean;
+    wPromo: boolean;
+  };
+  hp?: number;
+  types?: string[];
+  evolveFrom?: string;
+  description?: string;
+  stage?: string;
+  attacks?: {
+    cost: string[];
+    name: string;
+    effect?: string;
+    damage?: number;
+  }[];
+  weaknesses?: {
+    type: string;
+    value: string;
+  }[];
+  retreat?: number;
+  regulationMark?: string;
+  legal?: {
+    standard: boolean;
+    expanded: boolean;
+  };
+
   constructor(card: any) {
     this.id = card.id;
     this.name = card.name;
@@ -181,6 +237,17 @@ export class PokemonCard implements IPokemonCard {
     this.rarity = card.rarity;
     this.set = card.set;
     this.pricing = card.pricing;
+    this.variants = card.variants;
+    this.hp = card.hp;
+    this.types = card.types;
+    this.evolveFrom = card.evolveFrom;
+    this.description = card.description;
+    this.stage = card.stage;
+    this.attacks = card.attacks;
+    this.weaknesses = card.weaknesses;
+    this.retreat = card.retreat;
+    this.regulationMark = card.regulationMark;
+    this.legal = card.legal;
   }
 
   getImageURL(): string {

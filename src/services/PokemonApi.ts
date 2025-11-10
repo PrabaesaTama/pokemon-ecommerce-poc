@@ -29,7 +29,7 @@ export async function getAllCards(
   }
 }
 
-export async function getSingleCard(cardId: string): Promise<PokemonCard> {
+export async function getCardById(cardId: string): Promise<PokemonCard> {
   try {
     const response = await axios.get(
       `${TCGDEX_API.BASE_URL}${TCGDEX_API.ENDPOINTS.CARDS}/${cardId}`

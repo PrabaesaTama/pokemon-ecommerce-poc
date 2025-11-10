@@ -4,6 +4,7 @@ import { Routes } from "react-router";
 import NavigationBar from "./components/NavigationBar";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import CardDetailPage from "./pages/CardDetailPage";
 
 function App() {
   return (
@@ -12,6 +13,10 @@ function App() {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="card">
+          <Route path=":cardId" element={<CardDetailPage />} />
+        </Route>
+        // {/* <Route path="/card/:cardId" element={<CardDetailPage />} /> */}
       </Routes>
     </>
   );

@@ -3,6 +3,8 @@ import React, { useState, useMemo } from "react";
 import { Container, Row, Col, Card, Button, Pagination } from "react-bootstrap";
 import { usePagination } from "../hooks/UsePagination";
 import { PokemonCard } from "../services/types/PokemonCardType";
+import { MdShoppingCart } from "react-icons/md";
+import { Link, useNavigate } from "react-router";
 
 interface CardListProps {
   cards: PokemonCard[];
@@ -23,6 +25,7 @@ const CardList: React.FC<CardListProps> = ({ cards }) => {
     endIndex,
     totalItems,
   } = usePagination<PokemonCard>(cards, itemsPerPage);
+  const navigate = useNavigate();
 
   // Generate pagination items
   const paginationItems = useMemo(() => {
@@ -72,21 +75,39 @@ const CardList: React.FC<CardListProps> = ({ cards }) => {
             <Col key={card.id}>
               <Card className="h-100">
                 <div style={{ height: "360px", overflow: "hidden" }}>
-                  <Card.Img
-                    variant="top"
-                    src={card.getImageURL()}
-                    alt={card.name}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      aspectRatio: "3/4",
-                      objectFit: "contain",
-                    }}
-                  />
+                  <Link to={`/card/${card.id}`}>
+                    <Card.Img
+                      variant="top"
+                      src={card.getImageURL()}
+                      alt={card.name}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        aspectRatio: "3/4",
+                        objectFit: "contain",
+                      }}
+                    />
+                  </Link>
                 </div>
                 <Card.Body className="d-flex flex-column">
-                  <Card.Title className="fs-6">{card.name}</Card.Title>
+                  <Link
+                    to={`/card/${card.id}`}
+                    style={{ textDecoration: "none", color: "inherit" }}
+                  >
+                    <Card.Title
+                      className="fs-6"
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.textDecoration = "underline";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.textDecoration = "none";
+                      }}
+                    >
+                      {card.name}
+                    </Card.Title>
+                  </Link>
                   <Button variant="primary" className="mt-auto">
+                    <MdShoppingCart style={{ marginRight: "8px" }} />
                     Add to Cart
                   </Button>
                 </Card.Body>
