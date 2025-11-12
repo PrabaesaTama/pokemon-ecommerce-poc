@@ -3,6 +3,7 @@ export interface IPokemonCard {
   name: string;
   image?: string;
   rarity?: string;
+  category?: string;
   set: {
     id: string;
     name: string;
@@ -119,6 +120,7 @@ export class PokemonCard implements IPokemonCard {
   name: string = "";
   image?: string | undefined;
   rarity?: string | undefined;
+  category?: string | undefined;
   set: { id: string; name: string } = { id: "", name: "" };
   pricing?:
     | {
@@ -235,6 +237,7 @@ export class PokemonCard implements IPokemonCard {
     this.name = card.name;
     this.image = card.image;
     this.rarity = card.rarity;
+    this.category = card.category;
     this.set = card.set;
     this.pricing = card.pricing;
     this.variants = card.variants;

@@ -6,9 +6,10 @@ import {
   Row,
   Form,
   Spinner,
+  Button,
 } from "react-bootstrap";
 import { MdSearch } from "react-icons/md";
-import { getAllCards } from "../services/PokemonApi";
+import { deleteCache, getAllCards } from "../services/PokemonApi";
 import type { PokemonCard } from "../services/types/PokemonCardType";
 import CardList from "../components/CardList";
 import { useDebounce } from "../hooks/UseDebounce";
@@ -57,9 +58,11 @@ function HomePage() {
       return;
     }
 
-    const filtered = cards?.filter((card) => {
-      return card.types?.includes(selectedFilter);
-    });
+    const filtered = cards?.filter((card) =>
+      selectedFilter === "Trainer"
+        ? card.category === "Trainer"
+        : card.types?.includes(selectedFilter)
+    );
 
     setFilteredCards(filtered);
   }, [selectedFilter, cards]);
@@ -99,6 +102,7 @@ function HomePage() {
               <option value="Metal">Metal</option>
               <option value="Psychic">Psychic</option>
               <option value="Water">Water</option>
+              <option value="Trainer">Trainer</option>
             </Form.Select>
           </Col>
         </Row>
@@ -115,6 +119,17 @@ function HomePage() {
         ) : (
           <CardList cards={filteredCards || []} />
         )}
+      </Container>
+      <Container fluid className="px-4">
+        <Button
+          type="submit"
+          className="mt-4"
+          onClick={() => {
+            deleteCache();
+          }}
+        >
+          Delete Cache
+        </Button>
       </Container>
     </Container>
   );

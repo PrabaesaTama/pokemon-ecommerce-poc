@@ -1,5 +1,6 @@
 import axios from "axios";
 import { PokemonCard } from "./types/PokemonCardType";
+import { cacheService } from "./CacheService";
 
 export const cors_proxy = "https://cors-anywhere.herokuapp.com/";
 
@@ -12,6 +13,13 @@ export const TCGDEX_API = {
 } as const;
 
 export async function getAllCards(): Promise<PokemonCard[]> {
+  // Check cache first
+  const cachedCards = cacheService.getCards();
+  if (cachedCards) {
+    console.log("Loading cards from cache");
+    return cachedCards;
+  }
+
   try {
     const response = await axios.get(
       `${TCGDEX_API.BASE_URL}${TCGDEX_API.ENDPOINTS.SETS}/ME01`
@@ -43,9 +51,10 @@ export async function getAllCards(): Promise<PokemonCard[]> {
       console.warn(`${failedCards.length} cards failed to load:`, failedCards);
     }
 
-    console.log(
-      `Successfully loaded ${successfulCards.length} out of ${cards.length} cards`
-    );
+    // Save to cache
+    cacheService.setCards(successfulCards);
+
+    console.log(`Loaded ${successfulCards.length} cards from API and cached`);
 
     return successfulCards;
   } catch (error) {
@@ -62,9 +71,16 @@ export async function getCardById(cardId: string): Promise<PokemonCard> {
 
     const data = response.data;
     console.log(`Fetched card: `);
+    console.log(data);
     return new PokemonCard(data);
   } catch (error) {
     console.error(error);
     throw error;
   }
+}
+
+// Force refresh (bypass cache)
+export function deleteCache() {
+  cacheService.clearCards();
+  console.log("Cache cleared");
 }
