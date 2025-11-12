@@ -5,6 +5,7 @@ import { usePagination } from "../hooks/UsePagination";
 import { PokemonCard } from "../services/types/PokemonCardType";
 import { MdShoppingCart } from "react-icons/md";
 import { Link, useNavigate } from "react-router";
+import "./CardList.css";
 
 interface CardListProps {
   cards: PokemonCard[];
@@ -69,53 +70,51 @@ const CardList: React.FC<CardListProps> = ({ cards }) => {
       </div>
 
       {/* Cards Grid */}
-      <Container fluid>
-        <Row xs={1} md={2} lg={3} xl={4} className="g-4">
-          {paginatedItems.map((card) => (
-            <Col key={card.id}>
-              <Card className="h-100">
-                <div style={{ height: "360px", overflow: "hidden" }}>
-                  <Link to={`/card/${card.id}`}>
-                    <Card.Img
-                      variant="top"
-                      src={card.getImageURL()}
-                      alt={card.name}
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        aspectRatio: "3/4",
-                        objectFit: "contain",
-                      }}
-                    />
-                  </Link>
-                </div>
-                <Card.Body className="d-flex flex-column">
-                  <Link
-                    to={`/card/${card.id}`}
-                    style={{ textDecoration: "none", color: "inherit" }}
+      <Row className="g-4">
+        {paginatedItems.map((card) => (
+          <Col key={card.id} className="card-grid-col">
+            <Card className="h-100 card-fixed-width">
+              <div style={{ height: "360px", overflow: "hidden" }}>
+                <Link to={`/card/${card.id}`}>
+                  <Card.Img
+                    variant="top"
+                    src={card.getImageURL()}
+                    alt={card.name}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      aspectRatio: "3/4",
+                      objectFit: "contain",
+                    }}
+                  />
+                </Link>
+              </div>
+              <Card.Body className="d-flex flex-column">
+                <Link
+                  to={`/card/${card.id}`}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <Card.Title
+                    className="fs-6"
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.textDecoration = "underline";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.textDecoration = "none";
+                    }}
                   >
-                    <Card.Title
-                      className="fs-6"
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.textDecoration = "underline";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.textDecoration = "none";
-                      }}
-                    >
-                      {card.name}
-                    </Card.Title>
-                  </Link>
-                  <Button variant="primary" className="mt-auto">
-                    <MdShoppingCart style={{ marginRight: "8px" }} />
-                    Add to Cart
-                  </Button>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
-      </Container>
+                    {card.name}
+                  </Card.Title>
+                </Link>
+                <Button variant="primary" className="mt-auto">
+                  <MdShoppingCart style={{ marginRight: "8px" }} />
+                  Add to Cart
+                </Button>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Row>
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
