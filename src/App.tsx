@@ -16,7 +16,6 @@ function App() {
         <Route path="card">
           <Route path=":cardId" element={<CardDetailPage />} />
         </Route>
-        // {/* <Route path="/card/:cardId" element={<CardDetailPage />} /> */}
       </Routes>
     </>
   );

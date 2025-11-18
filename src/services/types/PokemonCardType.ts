@@ -304,8 +304,8 @@ export class PokemonCard implements IPokemonCard {
     return prices;
   }
 
-  getMarketPrices(): Array<{ version: String; price: number }> {
-    const prices: Array<{ version: String; price: number }> = [];
+  getMarketPrices(): Array<{ slug: string; version: string; price: number }> {
+    const prices: Array<{ slug: string; version: string; price: number }> = [];
 
     if (!this.pricing?.tcgplayer) {
       return prices;
@@ -314,15 +314,24 @@ export class PokemonCard implements IPokemonCard {
     const tcg = this.pricing.tcgplayer;
 
     if (tcg.normal?.marketPrice) {
-      prices.push({ version: "Normal", price: tcg.normal.marketPrice });
+      prices.push({
+        slug: "normal",
+        version: "Normal",
+        price: tcg.normal.marketPrice,
+      });
     }
 
     if (tcg.holofoil?.marketPrice) {
-      prices.push({ version: "Holofoil", price: tcg.holofoil.marketPrice });
+      prices.push({
+        slug: "holofoil",
+        version: "Holofoil",
+        price: tcg.holofoil.marketPrice,
+      });
     }
 
     if (tcg["reverse-holofoil"]?.marketPrice) {
       prices.push({
+        slug: "reverse-holofoil",
         version: "Reverse Holofoil",
         price: tcg["reverse-holofoil"].marketPrice,
       });
@@ -330,6 +339,7 @@ export class PokemonCard implements IPokemonCard {
 
     if (tcg["1st-edition"]?.marketPrice) {
       prices.push({
+        slug: "1st-edition",
         version: "1st Edition",
         price: tcg["1st-edition"].marketPrice,
       });
@@ -337,17 +347,23 @@ export class PokemonCard implements IPokemonCard {
 
     if (tcg["1st-edition-holofoil"]?.marketPrice) {
       prices.push({
+        slug: "1st-edition-holofoil",
         version: "1st Edition Holofoil",
         price: tcg["1st-edition-holofoil"].marketPrice,
       });
     }
 
     if (tcg.unlimited?.marketPrice) {
-      prices.push({ version: "Unlimited", price: tcg.unlimited.marketPrice });
+      prices.push({
+        slug: "unlimited",
+        version: "Unlimited",
+        price: tcg.unlimited.marketPrice,
+      });
     }
 
     if (tcg["unlimited-holofoil"]?.marketPrice) {
       prices.push({
+        slug: "unlimited-holofoil",
         version: "Unlimited Holofoil",
         price: tcg["unlimited-holofoil"].marketPrice,
       });

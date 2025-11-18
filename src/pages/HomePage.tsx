@@ -124,7 +124,6 @@ function HomePage() {
           <CardList
             cards={filteredCards || []}
             onAddToCart={(card) => {
-              console.log(card);
               setSelectedCard(card);
               setIsModalOpen(true);
             }}
@@ -146,8 +145,15 @@ function HomePage() {
       <AddToCartModal
         isOpen={isModalOpen}
         card={selectedCard || ({} as PokemonCard)}
-        onClose={() => setIsModalOpen(false)}
-        onAddToCart={() => {}}
+        onClose={() => {
+          setSelectedCard(null);
+          setIsModalOpen(false);
+        }}
+        onAddToCart={(card, slugs, quantities) => {
+          console.log(card);
+          console.log(slugs);
+          console.log(quantities);
+        }}
       />
     </Container>
   );

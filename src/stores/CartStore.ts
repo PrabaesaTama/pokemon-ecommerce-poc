@@ -20,13 +20,13 @@ class CartStore {
     });
   }
 
-  addToCart = (card: PokemonCard) => {
+  addToCart = (card: PokemonCard, quantity: number) => {
     const existingItem = this.items.find((item) => item.card.id === card.id);
 
     if (existingItem) {
       existingItem.quantity += 1;
     } else {
-      this.items.push({ card, quantity: 1 });
+      this.items.push({ card, quantity: quantity });
     }
   };
 
