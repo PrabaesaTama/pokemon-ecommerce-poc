@@ -13,6 +13,7 @@
     "@tcgdex/sdk": "^2.7.1",
     "axios": "^1.13.2",
     "bootstrap": "^5.3.8",
+    "mobx": "^6.15.0",
     "react": "^19.1.1",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.1.1",

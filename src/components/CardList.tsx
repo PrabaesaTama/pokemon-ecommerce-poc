@@ -9,9 +9,10 @@ import "./CardList.css";
 
 interface CardListProps {
   cards: PokemonCard[];
+  onAddToCart: (card: PokemonCard) => void;
 }
 
-const CardList: React.FC<CardListProps> = ({ cards }) => {
+const CardList: React.FC<CardListProps> = ({ cards, onAddToCart }) => {
   const itemsPerPage = 20;
   const {
     currentPage,
@@ -106,7 +107,19 @@ const CardList: React.FC<CardListProps> = ({ cards }) => {
                     {card.name}
                   </Card.Title>
                 </Link>
-                <Button variant="primary" className="mt-auto">
+                {card.getDisplayPrice(card).map((price, index) => (
+                  <div
+                    key={index}
+                    className="d-flex justify-content-between p-auto"
+                  >
+                    <Card.Text>{price}</Card.Text>
+                  </div>
+                ))}
+                <Button
+                  variant="primary"
+                  className="mt-auto"
+                  onClick={() => onAddToCart(card)}
+                >
                   <MdShoppingCart style={{ marginRight: "8px" }} />
                   Add to Cart
                 </Button>

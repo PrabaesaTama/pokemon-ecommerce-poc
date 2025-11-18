@@ -301,7 +301,58 @@ export class PokemonCard implements IPokemonCard {
       );
     }
 
-    console.log(`Card name: ${card.name}, Prices: ${prices}`);
+    return prices;
+  }
+
+  getMarketPrices(): Array<{ version: String; price: number }> {
+    const prices: Array<{ version: String; price: number }> = [];
+
+    if (!this.pricing?.tcgplayer) {
+      return prices;
+    }
+
+    const tcg = this.pricing.tcgplayer;
+
+    if (tcg.normal?.marketPrice) {
+      prices.push({ version: "Normal", price: tcg.normal.marketPrice });
+    }
+
+    if (tcg.holofoil?.marketPrice) {
+      prices.push({ version: "Holofoil", price: tcg.holofoil.marketPrice });
+    }
+
+    if (tcg["reverse-holofoil"]?.marketPrice) {
+      prices.push({
+        version: "Reverse Holofoil",
+        price: tcg["reverse-holofoil"].marketPrice,
+      });
+    }
+
+    if (tcg["1st-edition"]?.marketPrice) {
+      prices.push({
+        version: "1st Edition",
+        price: tcg["1st-edition"].marketPrice,
+      });
+    }
+
+    if (tcg["1st-edition-holofoil"]?.marketPrice) {
+      prices.push({
+        version: "1st Edition Holofoil",
+        price: tcg["1st-edition-holofoil"].marketPrice,
+      });
+    }
+
+    if (tcg.unlimited?.marketPrice) {
+      prices.push({ version: "Unlimited", price: tcg.unlimited.marketPrice });
+    }
+
+    if (tcg["unlimited-holofoil"]?.marketPrice) {
+      prices.push({
+        version: "Unlimited Holofoil",
+        price: tcg["unlimited-holofoil"].marketPrice,
+      });
+    }
+
     return prices;
   }
 }

@@ -13,6 +13,8 @@ import { deleteCache, getAllCards } from "../services/PokemonApi";
 import type { PokemonCard } from "../services/types/PokemonCardType";
 import CardList from "../components/CardList";
 import { useDebounce } from "../hooks/UseDebounce";
+import AddToCartModal from "../components/AddToCartModal";
+import { set } from "mobx";
 
 function HomePage() {
   const [cards, setCards] = useState<PokemonCard[]>();
@@ -20,6 +22,8 @@ function HomePage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedFilter, setSelectedFilter] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCard, setSelectedCard] = useState<PokemonCard | null>(null);
   const debounceSearchQuery = useDebounce(searchTerm, 300);
 
   useEffect(() => {
@@ -117,7 +121,14 @@ function HomePage() {
             <p className="mt-3">Fetching cards...</p>
           </div>
         ) : (
-          <CardList cards={filteredCards || []} />
+          <CardList
+            cards={filteredCards || []}
+            onAddToCart={(card) => {
+              console.log(card);
+              setSelectedCard(card);
+              setIsModalOpen(true);
+            }}
+          />
         )}
       </Container>
       <Container fluid className="px-4">
@@ -131,6 +142,13 @@ function HomePage() {
           Delete Cache
         </Button>
       </Container>
+
+      <AddToCartModal
+        isOpen={isModalOpen}
+        card={selectedCard || ({} as PokemonCard)}
+        onClose={() => setIsModalOpen(false)}
+        onAddToCart={() => {}}
+      />
     </Container>
   );
 }
