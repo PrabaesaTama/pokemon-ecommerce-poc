@@ -16,7 +16,6 @@ export async function getAllCards(): Promise<PokemonCard[]> {
   // Check cache first
   const cachedCards = cacheService.getCards();
   if (cachedCards) {
-    console.log("Loading cards from cache");
     return cachedCards;
   }
 
@@ -24,7 +23,6 @@ export async function getAllCards(): Promise<PokemonCard[]> {
     const response = await axios.get(
       `${TCGDEX_API.BASE_URL}${TCGDEX_API.ENDPOINTS.SETS}/ME01`
     );
-    console.log("response", response);
     const data = response.data;
 
     const cards = data.cards;
@@ -54,8 +52,6 @@ export async function getAllCards(): Promise<PokemonCard[]> {
     // Save to cache
     cacheService.setCards(successfulCards);
 
-    console.log(`Loaded ${successfulCards.length} cards from API and cached`);
-
     return successfulCards;
   } catch (error) {
     console.error(error);
@@ -70,8 +66,7 @@ export async function getCardById(cardId: string): Promise<PokemonCard> {
     );
 
     const data = response.data;
-    console.log(`Fetched card: `);
-    console.log(data);
+
     return new PokemonCard(data);
   } catch (error) {
     console.error(error);
@@ -82,5 +77,4 @@ export async function getCardById(cardId: string): Promise<PokemonCard> {
 // Force refresh (bypass cache)
 export function deleteCache() {
   cacheService.clearCards();
-  console.log("Cache cleared");
 }

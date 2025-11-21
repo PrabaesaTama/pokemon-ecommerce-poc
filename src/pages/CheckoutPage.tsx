@@ -66,89 +66,78 @@ const CheckoutPage = observer(() => {
           </tr>
         </thead>
         <tbody>
-          {cartStore.items.map(
-            (item) => (
-              console.log(item),
-              (
-                <tr key={item.card.id}>
-                  <td>
-                    <div className="product-item">
-                      <div className="product-image">
-                        <img
-                          src={
-                            item.card.getImageURL
-                              ? item.card.getImageURL()
-                              : "/assets/pokemon_card_backside.png"
-                          }
-                          alt={item.card.name}
-                          style={{ width: "100px", height: "auto" }}
-                        />
-                      </div>
-                      <div className="product-name">{item.card.name}</div>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="product-type">
-                      {SlugConverter.foil(item.slug)}
-                    </div>
-                  </td>
-                  <td>
-                    <div className="product-quantity">
-                      <Button
-                        size="sm"
-                        variant="outline-secondary"
-                        className="me-2"
-                        onClick={() =>
-                          cartStore.decreaseCardQuantity(
-                            item.card.id,
-                            item.slug
-                          )
-                        }
-                      >
-                        <MdRemove />
-                      </Button>
-                      <span className="quantity">{item.quantity}</span>
-                      <Button
-                        size="sm"
-                        variant="outline-secondary"
-                        className="ms-2"
-                        onClick={() =>
-                          cartStore.increaseCardQuantity(
-                            item.card.id,
-                            item.slug
-                          )
-                        }
-                      >
-                        <MdAdd />
-                      </Button>
-                    </div>
-                  </td>
-                  <td>
-                    <div className="product-price">
-                      {item.card.getMarketPrices
-                        ? item.card
-                            .getMarketPrices()
-                            .find((price) => price.slug === item.slug)?.price
-                        : 0}
-                    </div>
-                  </td>
-                  <td>
-                    <div className="product-remove">
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        onClick={() =>
-                          cartStore.removeFromCart(item.card.id, item.slug)
-                        }
-                      >
-                        <MdDelete />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              )
-            )
-          )}
+          {cartStore.items.map((item) => (
+            <tr key={item.card.id}>
+              <td>
+                <div className="product-item">
+                  <div className="product-image">
+                    <img
+                      src={
+                        item.card.getImageURL
+                          ? item.card.getImageURL()
+                          : "/assets/pokemon_card_backside.png"
+                      }
+                      alt={item.card.name}
+                      style={{ width: "100px", height: "auto" }}
+                    />
+                  </div>
+                  <div className="product-name">{item.card.name}</div>
+                </div>
+              </td>
+              <td>
+                <div className="product-type">
+                  {SlugConverter.foil(item.slug)}
+                </div>
+              </td>
+              <td>
+                <div className="product-quantity">
+                  <Button
+                    size="sm"
+                    variant="outline-secondary"
+                    className="me-2"
+                    onClick={() =>
+                      cartStore.decreaseCardQuantity(item.card.id, item.slug)
+                    }
+                  >
+                    <MdRemove />
+                  </Button>
+                  <span className="quantity">{item.quantity}</span>
+                  <Button
+                    size="sm"
+                    variant="outline-secondary"
+                    className="ms-2"
+                    onClick={() =>
+                      cartStore.increaseCardQuantity(item.card.id, item.slug)
+                    }
+                  >
+                    <MdAdd />
+                  </Button>
+                </div>
+              </td>
+              <td>
+                <div className="product-price">
+                  {item.card.getMarketPrices
+                    ? item.card
+                        .getMarketPrices()
+                        .find((price) => price.slug === item.slug)?.price
+                    : 0}
+                </div>
+              </td>
+              <td>
+                <div className="product-remove">
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() =>
+                      cartStore.removeFromCart(item.card.id, item.slug)
+                    }
+                  >
+                    <MdDelete />
+                  </Button>
+                </div>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </Table>
 
