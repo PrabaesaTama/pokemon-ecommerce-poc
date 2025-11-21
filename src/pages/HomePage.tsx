@@ -49,11 +49,30 @@ function HomePage() {
 
   useEffect(() => {
     if (!debounceSearchQuery.trim()) {
-      setFilteredCards(cards);
+      if (!selectedFilter) {
+        setFilteredCards(cards);
+      } else {
+        const filtered = cards?.filter((card) =>
+          selectedFilter === "Trainer"
+            ? card.category === "Trainer"
+            : card.types?.includes(selectedFilter)
+        );
+        setFilteredCards(filtered);
+      }
+
       return;
     }
 
     const filtered = cards?.filter((card) => {
+      if (selectedFilter) {
+        return (
+          card.name.toLowerCase().includes(debounceSearchQuery.toLowerCase()) &&
+          (selectedFilter === "Trainer"
+            ? card.category === "Trainer"
+            : card.types?.includes(selectedFilter))
+        );
+      }
+
       return card.name
         .toLowerCase()
         .includes(debounceSearchQuery.toLowerCase());
@@ -64,15 +83,31 @@ function HomePage() {
 
   useEffect(() => {
     if (!selectedFilter) {
-      setFilteredCards(cards);
+      if (!searchTerm) {
+        setFilteredCards(cards);
+      } else {
+        const filtered = cards?.filter((card) =>
+          card.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setFilteredCards(filtered);
+      }
       return;
     }
 
-    const filtered = cards?.filter((card) =>
-      selectedFilter === "Trainer"
+    const filtered = cards?.filter((card) => {
+      if (searchTerm) {
+        return (
+          card.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
+          (selectedFilter === "Trainer"
+            ? card.category === "Trainer"
+            : card.types?.includes(selectedFilter))
+        );
+      }
+
+      return selectedFilter === "Trainer"
         ? card.category === "Trainer"
-        : card.types?.includes(selectedFilter)
-    );
+        : card.types?.includes(selectedFilter);
+    });
 
     setFilteredCards(filtered);
   }, [selectedFilter, cards]);
