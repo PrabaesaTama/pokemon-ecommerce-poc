@@ -104,7 +104,6 @@ function HomePage() {
               <option value="Colorless">Colorless</option>
               <option value="Darkness">Darkness</option>
               <option value="Dragon">Dragon</option>
-              <option value="Fairy">Fairy</option>
               <option value="Fighting">Fighting</option>
               <option value="Fire">Fire</option>
               <option value="Grass">Grass</option>
