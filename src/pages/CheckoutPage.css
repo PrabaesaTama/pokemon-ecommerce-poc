@@ -1,0 +1,28 @@
+.full-width-container {
+  width: 80vw;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.shopping-cart-footer {
+  display: table;
+  width: 100%;
+  padding: 10px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+.shopping-cart-footer > .column {
+  display: table-cell;
+  padding: 5px 0;
+  vertical-align: middle;
+}
+
+.shopping-cart-footer > .column:first-child {
+  text-align: left;
+  padding-left: 20px;
+}
+
+.shopping-cart-footer > .column:last-child {
+  text-align: right;
+  padding-right: 20px;
+}

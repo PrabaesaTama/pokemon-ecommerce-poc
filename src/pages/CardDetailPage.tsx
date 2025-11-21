@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import type { PokemonCard } from "../services/types/PokemonCardType";
 import { getCardById } from "../services/PokemonApi";
@@ -11,15 +11,28 @@ import {
   Row,
   Spinner,
 } from "react-bootstrap";
+import AddToCartModal from "../components/AddToCartModal";
+import { useStore } from "../stores/StoreContext";
+import SuccessToast from "../components/SuccessToast";
 
 function CardDetailPage() {
   const { cardId } = useParams<{ cardId: string }>();
   const navigate = useNavigate();
-  const [card, setCard] = React.useState<PokemonCard | null>(null);
-  const [loading, setLoading] = React.useState(true);
-  const [error, setError] = React.useState<string | null>(null);
+  const [card, setCard] = useState<PokemonCard | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isToastOpen, setIsToastOpen] = useState(false);
+  const { cartStore } = useStore();
 
-  useEffect(() => {
+  /*************  ✨ Windsurf Command ⭐  *************/
+  /**
+   * Fetches a Pokemon card by its ID and updates the state accordingly.
+   *
+   * If the card ID is not found, sets the error state to "Card ID not found".
+   * If the fetch fails, sets the error state to "Failed to fetch card".
+   */
+  /*******  49c2945b-d50d-4f92-a3d5-9b05572afe6a  *******/ useEffect(() => {
     const fetchCard = async () => {
       if (!cardId) {
         setError("Card ID not found");
@@ -45,8 +58,7 @@ function CardDetailPage() {
   };
 
   const handleAddToCart = () => {
-    // Implement add to cart logic
-    console.log("Add to cart:", card);
+    setIsModalOpen(true);
   };
 
   if (loading) {
@@ -167,6 +179,32 @@ function CardDetailPage() {
           </Card>
         </Col>
       </Row>
+
+      <AddToCartModal
+        isOpen={isModalOpen}
+        card={card}
+        onClose={() => {
+          setIsModalOpen(false);
+        }}
+        onAddToCart={(card, slugs, quantities) => {
+          for (let i = 0; i < slugs.length; i++) {
+            if (quantities[i] <= 0) {
+              continue;
+            }
+
+            cartStore.addToCart(card, slugs[i], quantities[i]);
+          }
+
+          setIsModalOpen(false);
+          setIsToastOpen(true);
+        }}
+      />
+
+      <SuccessToast
+        show={isToastOpen}
+        onClose={() => setIsToastOpen(false)}
+        message="Card added to cart!"
+      />
     </Container>
   );
 }

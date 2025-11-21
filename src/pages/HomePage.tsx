@@ -7,6 +7,8 @@ import {
   Form,
   Spinner,
   Button,
+  Toast,
+  ToastContainer,
 } from "react-bootstrap";
 import { MdSearch } from "react-icons/md";
 import { deleteCache, getAllCards } from "../services/PokemonApi";
@@ -15,6 +17,8 @@ import CardList from "../components/CardList";
 import { useDebounce } from "../hooks/UseDebounce";
 import AddToCartModal from "../components/AddToCartModal";
 import { set } from "mobx";
+import { useStore } from "../stores/StoreContext";
+import SuccessToast from "../components/SuccessToast";
 
 function HomePage() {
   const [cards, setCards] = useState<PokemonCard[]>();
@@ -23,8 +27,10 @@ function HomePage() {
   const [selectedFilter, setSelectedFilter] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isToastOpen, setIsToastOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState<PokemonCard | null>(null);
   const debounceSearchQuery = useDebounce(searchTerm, 300);
+  const { cartStore } = useStore();
 
   useEffect(() => {
     const fetchCards = async () => {
@@ -150,10 +156,24 @@ function HomePage() {
           setIsModalOpen(false);
         }}
         onAddToCart={(card, slugs, quantities) => {
-          console.log(card);
-          console.log(slugs);
-          console.log(quantities);
+          for (let i = 0; i < slugs.length; i++) {
+            if (quantities[i] <= 0) {
+              continue;
+            }
+
+            cartStore.addToCart(card, slugs[i], quantities[i]);
+          }
+
+          setSelectedCard(null);
+          setIsModalOpen(false);
+          setIsToastOpen(true);
         }}
+      />
+
+      <SuccessToast
+        show={isToastOpen}
+        onClose={() => setIsToastOpen(false)}
+        message="Card added to cart!"
       />
     </Container>
   );

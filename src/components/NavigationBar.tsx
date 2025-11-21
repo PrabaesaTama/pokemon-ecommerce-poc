@@ -2,8 +2,9 @@ import { Badge, Container, Nav, Navbar } from "react-bootstrap";
 import { Link } from "react-router";
 import { MdShoppingCart } from "react-icons/md";
 import { useStore } from "../stores/StoreContext";
+import { observer } from "mobx-react-lite";
 
-function NavigationBar() {
+const NavigationBar = observer(() => {
   const { cartStore } = useStore();
 
   return (
@@ -20,6 +21,6 @@ function NavigationBar() {
       </Container>
     </Navbar>
   );
-}
+});
 
 export default NavigationBar;

@@ -1,8 +1,9 @@
 import { makeObservable, observable, action, computed } from "mobx";
-import type { PokemonCard } from "../services/types/PokemonCardType";
+import { PokemonCard } from "../services/types/PokemonCardType";
 
 export interface CartItem {
   card: PokemonCard;
+  slug: string;
   quantity: number;
 }
 
@@ -18,45 +19,112 @@ class CartStore {
       totalItems: computed,
       totalPrice: computed,
     });
+
+    this.loadFromLocalStorage();
   }
 
-  addToCart = (card: PokemonCard, quantity: number) => {
-    const existingItem = this.items.find((item) => item.card.id === card.id);
-
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      this.items.push({ card, quantity: quantity });
+  private saveToLocalStorage = () => {
+    try {
+      localStorage.setItem("cartItems", JSON.stringify(this.items));
+    } catch (error) {
+      console.warn("Failed to save to local storage:", error);
     }
   };
 
-  removeFromCart = (cardId: string) => {
-    this.items = this.items.filter((item) => item.card.id !== cardId);
+  private loadFromLocalStorage = () => {
+    try {
+      const saved = localStorage.getItem("cartItems");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+
+        this.items = parsed.map((item: any) => ({
+          ...item,
+          card: new PokemonCard(item.card), // ✅ Recreate the class instance
+        }));
+      }
+    } catch (error) {
+      console.error("Failed to load cart from storage:", error);
+    }
   };
 
-  updateQuantity = (cardId: string, quantity: number) => {
-    const item = this.items.find((item) => item.card.id === cardId);
+  addToCart = (card: PokemonCard, slug: string, quantity: number) => {
+    const existingItem = this.items.find(
+      (item) => item.card.id === card.id && item.slug === slug
+    );
+
+    if (existingItem) {
+      existingItem.quantity += quantity;
+    } else {
+      this.items.push({ card, slug: slug, quantity: quantity });
+    }
+
+    this.saveToLocalStorage();
+  };
+
+  removeFromCart = (cardId: string, slug: string) => {
+    for (let i = 0; i < this.items.length; i++) {
+      if (this.items[i].card.id === cardId && this.items[i].slug === slug) {
+        this.items.splice(i, 1);
+        break;
+      }
+    }
+
+    this.saveToLocalStorage();
+  };
+
+  updateQuantity = (cardId: string, slug: string, quantity: number) => {
+    const item = this.items.find(
+      (item) => item.card.id === cardId && item.slug === slug
+    );
 
     if (item) {
       if (quantity <= 0) {
-        this.removeFromCart(cardId);
+        this.removeFromCart(cardId, slug);
       } else {
         item.quantity = quantity;
       }
     }
+
+    this.saveToLocalStorage();
   };
 
   clearCart = () => {
     this.items = [];
+
+    this.saveToLocalStorage();
   };
 
-  getCardQuantity = (cardId: string): number => {
-    const item = this.items.find((item) => item.card.id === cardId);
+  getCardQuantity = (cardId: string, slug: string): number => {
+    const item = this.items.find(
+      (item) => item.card.id === cardId && item.slug === slug
+    );
     return item ? item.quantity : 0;
   };
 
-  isInCart = (cardId: string): boolean => {
-    return this.items.some((item) => item.card.id === cardId);
+  increaseCardQuantity = (cardId: string, slug: string) => {
+    const item = this.items.find(
+      (item) => item.card.id === cardId && item.slug === slug
+    );
+    if (item) {
+      item.quantity++;
+      this.saveToLocalStorage();
+    }
+  };
+
+  decreaseCardQuantity = (cardId: string, slug: string) => {
+    const item = this.items.find(
+      (item) => item.card.id === cardId && item.slug === slug
+    );
+    if (item && item.quantity > 1) {
+      item.quantity--;
+      this.saveToLocalStorage();
+    }
+  };
+
+  isInCart = (cardId: string, slug: string): boolean => {
+    return this.items.some(
+      (item) => item.card.id === cardId && item.slug === slug
+    );
   };
 
   get totalItems(): number {
@@ -64,6 +132,7 @@ class CartStore {
   }
 
   get totalPrice(): number {
+    //Fix this later
     return this.items.reduce((sum, item) => {
       const price = item.card.getDisplayPrice?.(item.card)?.[0]
         ? parseFloat(item.card.getDisplayPrice(item.card)[0].split("$")[1])
